@@ -14,6 +14,9 @@ import java.util.*;
  * @Version: 1.0
  */
 public class ProductLog {
+    /**
+     * 起始时间和结束时间
+     */
     private String startTime="2019-01-01";
     private String endTime="2019-12-31";
 
@@ -124,19 +127,13 @@ public class ProductLog {
      * @Return: java.lang.String
      */
     private String randomBuildTime(String startTime,String endTime) {
-        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
-        Date startDate=null;
-        Date endDate=null;
-        try {
-            startDate=simpleDateFormat.parse(startTime);
-            endDate= simpleDateFormat.parse(endTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        if(endDate.getTime()<=startDate.getTime()){
-            return null;
-        }
+       try {
+            SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+            Date startDate=simpleDateFormat.parse(startTime);
+            Date endDate=simpleDateFormat.parse(endTime);
+            if(endDate.getTime()<=startDate.getTime()){
+                return null;
+            }
 
         //随机通话建立时间的Long型
         long randomTS=startDate.getTime()+(long)((endDate.getTime()-startDate.getTime())*Math.random());
@@ -144,6 +141,10 @@ public class ProductLog {
         SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String resultTimeString=sf.format(resultDate);
         return resultTimeString;
+        } catch (ParseException e) {
+        e.printStackTrace();
+        }
+        return null;
     }
 
    /**
@@ -163,6 +164,7 @@ public class ProductLog {
                 String log=product();
                 System.out.println(log);
                 osw.write(log+"\n");
+                //手动刷新
                 osw.flush();
             }
         } catch (FileNotFoundException e) {
@@ -175,7 +177,8 @@ public class ProductLog {
     }
 
     public static void main(String[] args) {
-        args=new String[]{"H:\\项目实战\\caller.csv"};
+        //输出路径
+        //args=new String[]{"H:\\项目实战\\caller.csv"};
 
         if(args == null|| args.length<=0){
             System.out.println("没这个路径");
