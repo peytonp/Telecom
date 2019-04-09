@@ -74,7 +74,7 @@ public class HBaseUtil {
      * @Author: xy
      * @Date: 2019/4/9 22:39
      * @Version: 1.0
-     * @Param: [conf, tableName, regions, columnFamily] [配置，表名，列族]
+     * @Param: [conf, tableName, regions, columnFamily] [配置，表名，分区，列族]
      * @Return: void
      */
     public static void createTable(Configuration conf,String tableName,int regions,String...columnFamily) throws IOException {
@@ -104,7 +104,7 @@ public class HBaseUtil {
      * @Author: xy
      * @Date: 2019/4/9 22:57
      * @Version: 1.0
-     * @Param: [regions] 
+     * @Param: [regions]
      * @Return: byte[][]
      */
     private static byte[][] genSplitKeys(int regions){
