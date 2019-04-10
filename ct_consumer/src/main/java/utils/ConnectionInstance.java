@@ -5,7 +5,6 @@ import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * @ClassName: ConnectionInstance
@@ -25,6 +24,6 @@ public class ConnectionInstance {
         }  catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return conn;
     }
 }

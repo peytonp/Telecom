@@ -92,6 +92,7 @@ public class HBaseUtil {
             //列描述器 HColumnDescriptor
             htd.addFamily(new HColumnDescriptor(cf));
         }
+        htd.addCoprocessor("hbase.CalleeWriteObserver");
         //创建表，分区键
         admin.createTable(htd,genSplitKeys(regions));
         //关闭对象
@@ -150,6 +151,60 @@ public class HBaseUtil {
         boolean result = admin.tableExists(TableName.valueOf(tableName));
         close(admin,connection);
         return result;
+    }
+
+    /**
+     * @FunctionName: genRowkey
+     * @Description: 生成rowkey:regionCode_caller_buildTime_callee_flag_duration
+     * @Author: xy
+     * @Date: 2019/4/10 19:30
+     * @Version: 1.0
+     * @Param: [regioncode, caller, buildTime, callee, flag, duration]
+     * [散列的键、主叫、建立时间、被叫、标记主被叫、通话持续时间]
+     * @Return: java.lang.String
+     */
+    public static String genRowkey(String regionCode,String caller,String buildTime,String callee,String flag,String duration){
+        StringBuilder sb = new StringBuilder();
+        sb.append(regionCode+"_")
+                .append(caller+"_")
+                .append(buildTime+"_")
+                .append(callee+"_")
+                .append(flag+"_")
+                .append(duration);
+        return sb.toString();
+    }
+
+
+    /**
+     * @FunctionName: genRegionCode
+     * @Description: 生成分区号
+     * @Author: xy
+     * @Date: 2019/4/10 19:46
+     * @Version: 1.0
+     * @Param: [caller, buildTime, regions]
+     * [主叫，通话建立时间，region个数]
+     * @Return: java.lang.String 返回分区号
+     */
+    public static String genRegionCode(String caller,String buildTime,int regions){
+        int len=caller.length();
+        //取出主叫后四位
+        String lastPhone = caller.substring(len - 4);
+        //取出年和月
+        String ym = buildTime.replaceAll("-", "")
+                .replaceAll(" ", "")
+                .replaceAll(":", "")
+                .substring(0, 6);
+
+        //离散操作1
+        Integer x = Integer.valueOf(lastPhone) ^ Integer.valueOf(ym);
+        //离散操作2
+        int y = x.hashCode();
+        //生成分区号
+        int regionCode = y % regions;
+        //格式化分区号
+        DecimalFormat df = new DecimalFormat("00");
+        return df.format(regionCode);
+
     }
 
 }

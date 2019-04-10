@@ -1,5 +1,6 @@
 package kafka;
 
+import hbase.HBaseDAO;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -19,11 +20,13 @@ public class HBaseConsumer {
         KafkaConsumer<String,String> kafkaconsumer=new KafkaConsumer<>(PropertiesUtil.properties);
         kafkaconsumer.subscribe(Arrays.asList(PropertiesUtil.getProperty("kafka.topics")));
 
+        HBaseDAO hd = new HBaseDAO();
         while(true){
             ConsumerRecords<String, String> records = kafkaconsumer.poll(100);
             for(ConsumerRecord<String, String> cr:records){
                 String orivalue=cr.value();
                 System.out.println(orivalue);
+                hd.put(orivalue);
             }
         }
 

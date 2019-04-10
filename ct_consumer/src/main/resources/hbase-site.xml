@@ -47,4 +47,9 @@
 		<name>hbase.zookeeper.property.dataDir</name>
 		<value>/zookeeper/zkData</value>
 	</property>
+	<!--HBase的协处理器-->
+	<property>
+        <name>hbase.coprocessor.region.classes</name>
+        <value>hbase.CalleeWriteObserver</value>
+	</property>
 </configuration>
