@@ -46,7 +46,7 @@ public class CalleeWriteObserver extends BaseRegionObserver {
         String caller=splitOriRowKey[1];
         String callee=splitOriRowKey[3];
         String buildTime=splitOriRowKey[2];
-        if(splitOriRowKey[4]=="0"){
+        if(splitOriRowKey[4].equals("0")){
             return ;
         }
         String flag = "0";
